@@ -114,14 +114,34 @@ const handleSaveClick = async (
     console.log(" After type change (Blacklist):", editedData);
   }
 
-  // Convert date format
-  let formattedDate = editedData.telecall.scheduledDate;
-  if (formattedDate && formattedDate.includes("-") && formattedDate.length === 10) {
-    const [day, month, year] = formattedDate.split("-");
-    if (year.length === 4) {
-      formattedDate = `${year}-${month}-${day}`;
+  // // Convert date format
+  // let formattedDate = editedData.telecall.scheduledDate;
+  // if (formattedDate && formattedDate.includes("-") && formattedDate.length === 10) {
+  //   const [day, month, year] = formattedDate.split("-");
+  //   if (year.length === 4) {
+  //     formattedDate = `${year}-${month}-${day}`;
+  //   }
+  // }
+  // 🔥 FIX: Normalize date
+let formattedDate = editedData.telecall.scheduledDate;
+
+if (formattedDate) {
+  // Case 1: UI gives object → { day, month, year }
+  if (typeof formattedDate === "object") {
+    const { day, month, year } = formattedDate;
+    formattedDate = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+  }
+
+  // Case 2: UI gives YYYY-MM-DD → keep as is
+  if (typeof formattedDate === "string" && formattedDate.includes("-")) {
+    const parts = formattedDate.split("-");
+    if (parts[0].length === 4) {
+      // Already correct
+      formattedDate = formattedDate;
     }
   }
+}
+
 
   const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
   console.log("⏳ Current Time:", currentTime);
@@ -176,7 +196,9 @@ const handleSaveClick = async (
               type: editedData.type, // Update the type in the state
               telecall: {
                 ...row.telecall,
-                scheduledDate: formatDate(editedData.telecall.scheduledDate),
+                // scheduledDate: formatDate(editedData.telecall.scheduledDate),
+                scheduledDate: formattedDate,
+
                 callFeedback: editedData.telecall.callFeedback,
                 comment: editedData.telecall.comment,
               },

@@ -503,6 +503,21 @@ console.log("Rows Data:",token);
       showSnackbar("No results found", "error");
     }
   };
+  const convertForInput = (dateStr) => {
+  if (!dateStr) return "";
+  // if date already ISO, return as is
+  if (dateStr.includes("-")) return dateStr;
+
+  const [day, month, year] = dateStr.split("/");
+  return `20${year}-${month}-${day}`; 
+};
+
+const convertForSave = (isoDate) => {
+  if (!isoDate) return "";
+  const [year, month, day] = isoDate.split("-");
+  return `${day}/${month}/${year.slice(2)}`;
+};
+
 
   useEffect(() => {
     let storedToken = Cookies.get("token");
@@ -819,9 +834,23 @@ console.log("Rows Data:",token);
                             onClick={() => {
                               if (
                                 mobileEditedData &&
-                                mobileEditedData.telecall
-                              ) {
-                                handleSaveClick(
+                                mobileEditedData.telecall)
+
+                              
+                                 {
+                                   console.log(
+    "Before Save → scheduledDate = ",
+    mobileEditedData.telecall.scheduledDate
+  );
+
+          if (
+        mobileEditedData.telecall.scheduledDate &&
+        typeof mobileEditedData.telecall.scheduledDate === "object"
+      ) {
+        const { day, month, year } = mobileEditedData.telecall.scheduledDate;
+        mobileEditedData.telecall.scheduledDate = `${year}-${month}-${day}`;
+      }
+                                  handleSaveClick(
                                   token,
                                   row.customer_id,
                                   mobileEditedData,
@@ -907,8 +936,7 @@ console.log("Rows Data:",token);
                                   callStatus: row.telecall?.callStatus || "",
                                   callFeedback:
                                     row.telecall?.callFeedback || "",
-                                  scheduledDate:
-                                    row.telecall?.scheduledDate || "",
+                                    scheduledDate: convertForInput(row.telecall?.scheduledDate) || "",
                                   comment: row.telecall?.comment || "",
                                 },
                               });
