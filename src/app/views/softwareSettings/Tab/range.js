@@ -354,7 +354,7 @@ export default function Range() {
     "@media (max-width:600px)": {
       maxHeight: "100%",
       "& table": {
-        minWidth: "100px",
+        minWidth: "600px",
       },
     },
   }}

@@ -356,8 +356,7 @@ function AdvancedChart({ type, data, config, height = 300 }) {
                             nameKey="name"
                              labelLine={true}
     label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-    minAngle={10} 
-                        >
+    minAngle={10}>
                             {data.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={COLORS.primary[index % COLORS.primary.length]} />
                             ))}
@@ -2090,7 +2089,7 @@ function InventoryIntelligence() {
                 </Grid>
             </Grid>
 
-            {/* Inventory Intelligence Grid */}
+            {/* Inventory Intelligence Grid */}  
             <Grid container spacing={3} sx={{ mb: 4 }}>
                 {/* Stock Alerts */}
                 <Grid item xs={12} lg={4}>
